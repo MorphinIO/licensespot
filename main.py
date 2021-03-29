@@ -11,7 +11,7 @@ from tensorflow.keras import datasets, layers, models
 
 # place your dataset path here
 # dataset download links:
-# https://web.inf.ufpr.br/vri/databases/ufpr-alpr/
+# http://www.zemris.fer.hr/projects/LicensePlates/english/results.shtml
 # https://www.kaggle.com/alessiocorrado99/animals10
 # https://www.kaggle.com/prasunroy/natural-images
 datasetPath = "/Users/michael/documents/dev/licensespot/dataset"
