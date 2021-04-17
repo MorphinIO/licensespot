@@ -14,7 +14,7 @@ from tensorflow.keras import datasets, layers, models
 # http://www.zemris.fer.hr/projects/LicensePlates/english/results.shtml
 # https://www.kaggle.com/alessiocorrado99/animals10
 # https://www.kaggle.com/prasunroy/natural-images
-datasetPath = "/Users/michael/documents/dev/licensespot/dataset"
+datasetPath = "dataset"
 
 class CNNData:
     def __init__(self, datasetPath):
@@ -46,11 +46,13 @@ class CNNImage:
 
         print(self.filepath)
         # convert to tensor and output
-        self.image = Image.open(self.filepath)
+        self.image = Image.open(self.filepath).convert('LA') #convert image to grayscale
+        # converts the image size to given ratio
+        self.image = self.image.resize((400,400))
+        print(self.image.size)
         self.image = ToTensor()(self.image).unsqueeze(0) # unsqueeze to add artificial first dimension
         print(self.image)
-
-
+        
 
 
 if __name__ == "__main__":
