@@ -36,20 +36,21 @@ class CNNData:
                     # if from licenseplate dataset, place it in the licensePlate Set
                     # else put it in the Random set
                     newImage = CNNImage(dirpath, filename)
-                    if "licenseplates" in dirpath:
+                    if "newlicenseplates" in dirpath:
                         if count % 5 == 0:
                             self.testData.append(newImage.image)
                             self.testLabel.append(1)
                         else:
                             self.trainingData.append(newImage.image)
-                            self.testLabel.append(1)
+                            self.trainingLabel.append(1)
                     else:
                         if count % 5 == 0:
                             self.testData.append(newImage.image)
                             self.testLabel.append(0)
                         else:
                             self.trainingData.append(newImage.image)
-                            self.testLabel.append(0)
+                            self.trainingLabel.append(0)
+                    count += 1
 
 
 class CNNImage:
@@ -62,9 +63,7 @@ class CNNImage:
         ])
         self.filepath = dirpath + '/' + filename
         self.filename = filename
-        self.isPlate = 0 # not a license plate
-        if "newlicenseplates" in dirpath:
-            self.isPlate = 1 # is a license plate
+
 
         #print(self.filepath)
         # convert to tensor and output
@@ -73,7 +72,7 @@ class CNNImage:
         self.image = transform(self.image)
 
         #print(self.image)
-        print(self.isPlate)
+        #print(self.isPlate)
         
 
 
@@ -99,8 +98,8 @@ model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
 
-history = model.fit(Data.trainingData, Data.trainingLabels, epochs=10, 
-                    validation_data=(Data.testData, Data.testLabels))
+history = model.fit(Data.trainingData, Data.trainingLabel, epochs=10, 
+                    validation_data=(Data.testData, Data.testLabel))
 
 plt.plot(history.history['accuracy'], label='accuracy')
 plt.plot(history.history['val_accuracy'], label = 'val_accuracy')
@@ -109,6 +108,6 @@ plt.ylabel('Accuracy')
 plt.ylim([0.5, 1])
 plt.legend(loc='lower right')
 
-test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+test_loss, test_acc = model.evaluate(Data.testData,  Data.testLabel, verbose=2)
 
 print(test_acc)
