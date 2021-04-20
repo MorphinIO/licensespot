@@ -20,7 +20,7 @@ datasetPath = "dataset"
 
 class CNNData:
     def __init__(self, datasetPath):
-        self.testData = []
+        self.trainingLabel = []
         self.trainingData = []
         self.testLabel = []
         self.testData = []
@@ -56,7 +56,7 @@ class CNNImage:
     def __init__(self, dirpath, filename):
         transform = transforms.Compose([
             transforms.Resize(256),
-            transforms.Grayscale(num_output_channels=1),
+            #transforms.Grayscale(num_output_channels=1),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
@@ -66,14 +66,14 @@ class CNNImage:
         if "newlicenseplates" in dirpath:
             self.isPlate = 1 # is a license plate
 
-        print(self.filepath)
+        #print(self.filepath)
         # convert to tensor and output
 
         self.image = Image.open(self.filepath).convert('RGB')
         self.image = transform(self.image)
 
-        print(self.image)
-        print(self.isPlate);
+        #print(self.image)
+        print(self.isPlate)
         
 
 
@@ -83,7 +83,7 @@ if __name__ == "__main__":
 Data = CNNData(datasetPath)
 
 model = models.Sequential()
-model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 1)))
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 3)))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
