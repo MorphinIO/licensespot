@@ -1,16 +1,13 @@
-# conda install tensorflow
-import tensorflow as tf
-import os
-# conda install pillow
-from PIL import Image
-# conda install torchvision
-from torchvision.transforms import ToTensor
-from torchvision import transforms
-
-from tensorflow.keras import datasets, layers, models
-import matplotlib.pyplot as plt
 import pathlib
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import PIL
+import tensorflow as tf
+
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
 
 # place your dataset path here
 # dataset download links:
@@ -80,8 +77,8 @@ class CNNImage:
 if __name__ == "__main__":
     print('Hello World')
 
-data_dir = tf.keras.utils.get_file('carPhotos')
-data_dir = pathlib.Path(data_dir)
+#data_dir = tf.keras.utils.get_file('carPhotos')
+data_dir = pathlib.Path('dataset/carPhotos')
 
 image_count = len(list(data_dir.glob('*/*.jpg')))
 print(image_count)
@@ -116,10 +113,10 @@ for image_batch, labels_batch in train_ds:
   break
 
 
-AUTOTUNE = tf.data.AUTOTUNE
+#AUTOTUNE = tf.data.AUTOTUNE
 
-train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
+#train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
+#val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
 normalization_layer = layers.experimental.preprocessing.Rescaling(1./255)
 
