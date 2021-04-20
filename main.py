@@ -15,7 +15,7 @@ from tensorflow.keras import datasets, layers, models
 # http://www.zemris.fer.hr/projects/LicensePlates/english/results.shtml
 # https://www.kaggle.com/alessiocorrado99/animals10  DO NOT USE
 # https://www.kaggle.com/prasunroy/natural-images
-datasetPath = "/Users/michael/documents/dev/licensespot/dataset"
+datasetPath = "dataset"
 
 class CNNData:
     def __init__(self, datasetPath):
@@ -62,12 +62,13 @@ class CNNImage:
 
         print(self.filepath)
         # convert to tensor and output
+
         self.image = Image.open(self.filepath)
         self.image = transform(self.image)
-        #self.image = ToTensor()(self.image).unsqueeze(0) # unsqueeze to add artificial first dimension
+
         print(self.image)
-
-
+        print(self.isPlate)
+        
 
 
 if __name__ == "__main__":
