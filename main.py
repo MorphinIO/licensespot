@@ -9,6 +9,7 @@ from torchvision import transforms
 
 from tensorflow.keras import datasets, layers, models
 import matplotlib.pyplot as plt
+import pathlib
 #import matplotlib.pyplot as plt
 
 # place your dataset path here
@@ -79,7 +80,41 @@ class CNNImage:
 if __name__ == "__main__":
     print('Hello World')
 
-Data = CNNData(datasetPath)
+data_dir = tf.keras.utils.get_file('carPhotos')
+data_dir = pathlib.Path(data_dir)
+
+image_count = len(list(data_dir.glob('*/*.jpg')))
+print(image_count)
+
+batch_size = 32
+img_height = 256
+img_width = 256
+
+
+train_ds = tf.keras.preprocessing.image_dataset_from_directory(
+  data_dir,
+  validation_split=0.2,
+  subset="training",
+  seed=123,
+  image_size=(img_height, img_width),
+  batch_size=batch_size)
+
+val_ds = tf.keras.preprocessing.image_dataset_from_directory(
+  data_dir,
+  validation_split=0.2,
+  subset="validation",
+  seed=123,
+  image_size=(img_height, img_width),
+  batch_size=batch_size)
+
+class_names = train_ds.class_names
+print(class_names)
+
+for image_batch, labels_batch in train_ds:
+  print(image_batch.shape)
+  print(labels_batch.shape)
+  break
+
 
 model = models.Sequential()
 model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 3)))
