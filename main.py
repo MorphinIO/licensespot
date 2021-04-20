@@ -8,6 +8,7 @@ from torchvision.transforms import ToTensor
 from torchvision import transforms
 
 from tensorflow.keras import datasets, layers, models
+import matplotlib.pyplot as plt
 #import matplotlib.pyplot as plt
 
 # place your dataset path here
@@ -19,10 +20,10 @@ datasetPath = "dataset"
 
 class CNNData:
     def __init__(self, datasetPath):
-        self.testLicensePlates = []
-        self.testRandomData = []
-        self.trainingLicensePlates = []
-        self.trainingRandomData = []
+        self.testData = []
+        self.trainingData = []
+        self.testLabel = []
+        self.testData = []
 
         # crawl dataset path
         for dirpath, dirnames, filenames in os.walk(datasetPath):
@@ -34,22 +35,27 @@ class CNNData:
                 if (".jpg" in filename) or (".png" in filename) or (".jpeg" in filename):
                     # if from licenseplate dataset, place it in the licensePlate Set
                     # else put it in the Random set
+                    newImage = CNNImage(dirpath, filename)
                     if "licenseplates" in dirpath:
                         if count % 5 == 0:
-                            self.testLicensePlates.append(CNNImage(dirpath, filename))
+                            self.testData.append(newImage.image)
+                            self.testLabel.append(1)
                         else:
-                            self.trainingLicensePlates.append(CNNImage(dirpath, filename))
+                            self.trainingData.append(newImage.image)
+                            self.testLabel.append(1)
                     else:
                         if count % 5 == 0:
-                            self.testRandomData.append(CNNImage(dirpath, filename))
+                            self.testData.append(newImage.image)
+                            self.testLabel.append(0)
                         else:
-                            self.trainingRandomData.append(CNNImage(dirpath, filename))
+                            self.trainingData.append(newImage.image)
+                            self.testLabel.append(0)
 
 
 class CNNImage:
     def __init__(self, dirpath, filename):
         transform = transforms.Compose([
-            transforms.Resize(256)
+            transforms.Resize(256),
             transforms.Grayscale(num_output_channels=1),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
@@ -57,17 +63,17 @@ class CNNImage:
         self.filepath = dirpath + '/' + filename
         self.filename = filename
         self.isPlate = 0 # not a license plate
-        if "licenseplates" in dirpath:
+        if "newlicenseplates" in dirpath:
             self.isPlate = 1 # is a license plate
 
         print(self.filepath)
         # convert to tensor and output
 
-        self.image = Image.open(self.filepath)
+        self.image = Image.open(self.filepath).convert('RGB')
         self.image = transform(self.image)
 
         print(self.image)
-        print(self.isPlate)
+        print(self.isPlate);
         
 
 
@@ -87,3 +93,22 @@ model.add(layers.Flatten())
 model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Dense(10))
 
+model.summary()
+
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+
+history = model.fit(Data.trainingData, Data.trainingLabels, epochs=10, 
+                    validation_data=(Data.testData, Data.testLabels))
+
+plt.plot(history.history['accuracy'], label='accuracy')
+plt.plot(history.history['val_accuracy'], label = 'val_accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.ylim([0.5, 1])
+plt.legend(loc='lower right')
+
+test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+
+print(test_acc)
