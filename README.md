@@ -8,5 +8,6 @@ A NN to detect a license plate in a given piece of data
    - pathlib
    - matplotlib.pyplot
    - tensorflow
+   - PIL
  - `python train.py` to train the model
  - `python run.py` to test images against the models
