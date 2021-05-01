@@ -1,5 +1,5 @@
 # licensespot
-A CNN to detect a license plate in a given piece of data
+A CNN to detect a license plate in a given image
 
 ## Getting Started
  - Clone the Project
